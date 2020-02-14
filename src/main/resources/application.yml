@@ -1,0 +1,58 @@
+## Spring DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+spring:
+  ## Hibernate Properties
+  jpa:
+    hibernate:
+      # The SQL dialect makes Hibernate generate better SQL for the chosen database
+      dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+      # Hibernate ddl auto (create, create-drop, validate, update)
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://10.100.59.111:3306/jirakpi
+    username: jirakpi
+    password: o4sn2019
+    # Initialize the datasource with available DDL and DML scripts
+    initialization-mode: always
+  data :
+      web :
+          pageable :
+              size-parameter : size
+              page-parameter : page
+              default-page-size : 10
+              one-indexed-parameters : true
+              max-page-size : 2000
+  jackson :
+      date-format : yyyy-MM-dd HH:mm:ss
+     # spring:
+      #  jackson:
+       #   time-zone=Europe/Zagreb:
+    ## Jackson Properties (Added by me)
+      serialization.WRITE_DATES_AS_TIMESTAMPS: false
+      time-zone: UTC
+
+application:
+  baseUrl: http://jira.tools.orange-sonatel.com
+  token: Basic c3RnX2VwdF9kczppdGVhbTIwMTk=
+
+server:
+  port: 9090
+
+## Hibernate Logging (SQL statements)
+#logging:
+ # level:
+  #    org:
+   #       hibernate:
+    #          SQL: DEBUG
+
+# JWT (Token for auth)
+app:
+  jwtSecret: JWTSuperSecretKey
+  jwtExpirationInMs: 604800000
+
+
+
+#logging:
+#  level:
+#    ROOT: TRACE
+#    com.example.jira: TRACE
+#    org.apache.tomcat.util.net: WAR
