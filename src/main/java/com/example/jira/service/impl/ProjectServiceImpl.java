@@ -44,14 +44,6 @@ public class ProjectServiceImpl implements ProjectService {
                             return Mono.just(aProject);
                         }
                 );
-/*
-        List<Board> boards = new ArrayList<>();
-        Board aBoard = new Board();
-        for (BoardDto boardDto : boardDtos){
-            BeanUtils.copyProperties(boardDto,aBoard);
-            boards.add(aBoard);
-        }
-        return Flux.fromIterable(boards);*/
     }
 
     @Override

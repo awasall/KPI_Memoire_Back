@@ -28,8 +28,6 @@ public class UpdateService {
     }
 @Autowired
     SprintRepository spp;
-    // Updates every day at 8am
-    //@Scheduled(cron="0 0 8 * * *")
     public Mono<Boolean> updateDB() {
         System.out.println("ok");
         return categoryService
@@ -42,7 +40,6 @@ public class UpdateService {
                         // NOW POPULATING THE BD
                         .flatMap(project -> boardService
                                 .allBoardByProjects(project.getId())
-
                                 .flatMap(board -> boardService.save(board.toBuilder().project(project).build()))
                                 .flatMap(board -> sprintService.getAllSprint(board.getId())
                                         .map(sprint -> sprintService.getReport(sprint.getOriginBoardId(), sprint.getId())

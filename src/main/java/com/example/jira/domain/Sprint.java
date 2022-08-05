@@ -8,7 +8,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -65,7 +64,9 @@ public class Sprint implements Serializable {
     private int velocite;
     private int dureeSprint;
     private int dureeEntreDeuxSprint;
-
+    //private  Date date;
+    private int detteTechnique;
+//methode pour calculer les stp engagés et réalisées .....de chaque sprint
     public Sprint setReport (Report report){
             stpEngage = report.stpEngage();
             stpRealise = report.stpRealise() ;
@@ -75,6 +76,9 @@ public class Sprint implements Serializable {
             bugs = report.bugs();
             return this;
     }
+ //Méthode pour l'historique des dettes techniques
+
+
     /**
      * Calcule la liste des durées entre deux sprints consécutifs en jours ouvrables
      * @param spp
@@ -142,20 +146,17 @@ public class Sprint implements Serializable {
         return dureeEntreDeuxSprint;
     }
 
-    //calcul accélération
-    public List<Integer> calculAccele(SprintRepository spp,int id){
-        List<Sprint> sprints = spp.findByBoardIdOrderById(id);
-        return accelerer(spp,sprints);
-    }
+
+    //Calculons l'accération
     public List<Integer> accelerer(SprintRepository spp, List<Sprint> sprints) {
         List<Integer> resultat = new LinkedList<>();
-
         for( int i=3;i<sprints.size();i++){
             Sprint sprint3 = sprints.get(i);
             Sprint sprint2 = sprints.get(i-1);
             Sprint sprint1 = sprints.get(i-2);
             Sprint sprint0 = sprints.get(i-3);
-            float moy=(float)(sprints.get(i-3).getStpRealise()+sprints.get(i-2).getStpRealise()+sprints.get(i-1).getStpRealise())/3;
+            float moy=(float)(sprints.get(i-3).getStpRealise()+sprints.get(i-2).
+                    getStpRealise()+sprints.get(i-1).getStpRealise())/3;
             if(sprints.get(i).getStpRealise()==0 ){
                 acceleration=0;
             }
@@ -168,7 +169,6 @@ public class Sprint implements Serializable {
             else{
                 acceleration= (int) (((sprints.get(i).getStpRealise()/moy))*100);
             }
-
             if(i==3){
                 sprint0.setAcceleration(0);
                 sprint1.setAcceleration(0);
@@ -177,18 +177,26 @@ public class Sprint implements Serializable {
                 spp.save(sprint1);
                 spp.save(sprint2);
             }
-
             sprint3.setAcceleration(acceleration);
             spp.save(sprint3);
-
-
             resultat.add((int) acceleration);
         }
         return resultat;
     }
+    //regrouper les sprints qui ont un meme boardId et et l'ordonner par id
+    public List<Integer> calculAccele(SprintRepository spp,int id){
+        List<Sprint> sprints = spp.findByBoardIdOrderById(id);
+        return accelerer(spp,sprints);
+    }
 
-    //Calculons duree sprint
 
+
+
+
+
+
+
+    //Calculons duree du'un sprint
     public int dureSpr(){
         if(startDate==null || endDate==null){
             dureeSprint=0;
@@ -201,14 +209,13 @@ public class Sprint implements Serializable {
             while (c1.before(c2)) {
                 if ((Calendar.SATURDAY != c1.get(Calendar.DAY_OF_WEEK))
                         && (Calendar.SUNDAY != c1.get(Calendar.DAY_OF_WEEK))) {
-                    dureeSprint++;
-                }
-                c1.add(Calendar.DATE, 1);
-            }
+                    dureeSprint++; }
+                c1.add(Calendar.DATE, 1); }
         }
-        //System.out.println(dureeSprint);
         return dureeSprint;
     }
+
+
     public void kpi (){
         if(stpEngage>0)
         completude = (int) Math.round((double)stpRealise/stpEngage*100 );

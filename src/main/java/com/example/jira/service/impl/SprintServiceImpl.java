@@ -1,12 +1,11 @@
 package com.example.jira.service.impl;
-
 import com.example.jira.api.report.Report;
 import com.example.jira.config.ApplicationProperties;
+import com.example.jira.domain.Composant;
 import com.example.jira.domain.Sprint;
 import com.example.jira.repository.SprintRepository;
 import com.example.jira.service.SprintService;
 import com.example.jira.service.dto.jiraApi.SprintDto;
-import com.example.jira.web.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +16,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,12 +56,29 @@ public class SprintServiceImpl implements SprintService {
         //.doOnError(e ->e.printStackTrace());
         return report.filter(report1 -> !report1.equals(Mono.empty()));
     }
+//recupérer la dette technique
+    @Override
+    public Mono<Composant> getMeasures(String projectKey, String metric, Date dates, int pageIndex, int pageSize){
+        final String url = "/api/measures/search_history?component=" + projectKey + "&metrics=" + metric + "&from=" + dates +"&ps=1&p=1";
+        Mono<Composant> mes = webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(Composant.class)
+                .doOnError(e -> {
+                    log.info("ERROR URL -- {}", this.applicationProperties.getBaseUrl() + url);
+                    Mono.empty();
+                });
+        return mes.filter(report1 -> !report1.equals(Mono.empty()));
 
+    }
+
+      //Recupérer les sprints
     public Flux<Sprint> getAllSprint(int id) {
         return webClient.get()
                 .uri("rest/agile/1.0/board/" + id + "/sprint?")
                 .exchange()
-                .flatMapMany(clientResponse -> clientResponse.bodyToMono(SprintDto.class))
+                .flatMapMany(clientResponse ->
+                        clientResponse.bodyToMono(SprintDto.class))
                 .map(SprintDto::getValues)
                 .map(sprintDtos -> Flux.fromIterable(
                         sprintDtos

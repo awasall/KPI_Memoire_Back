@@ -7,18 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 //@EnableScheduling
-
-
 public class servTest  {
-    //@Autowired
     public static
     UpdateService updateService;
-
     public servTest(UpdateService updateService) {
         this.updateService = updateService;
     }
-
-    @Scheduled(cron="0 0/5 * * * ?", zone="UTC")
+    @Scheduled(cron="${cron.expression}")
+    //@Scheduled(cron="0 0/5 * * * ?", zone="UTC")
     public static void tester(){
         updateService.updateDB().subscribe(
                 success ->

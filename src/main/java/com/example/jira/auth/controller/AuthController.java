@@ -2,6 +2,7 @@ package com.example.jira.auth.controller;
 
 import com.example.jira.auth.exception.AppException;
 import com.example.jira.auth.exception.InvalidOldPasswordException;
+import com.example.jira.auth.exception.ResourceNotFoundException;
 import com.example.jira.auth.model.Role;
 import com.example.jira.auth.model.RoleName;
 import com.example.jira.auth.model.User;
@@ -27,17 +28,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.Collections;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Api( description="API pour la gestion des authentifications.")
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 @Slf4j
@@ -167,6 +168,44 @@ public class AuthController implements CommandLineRunner {
             userRepository.save(admin);
         }
     }
+
+        @GetMapping("/listuser")
+        public List<User> getAllUser() {
+            return userRepository.findAll();
+        }
+        @GetMapping("/detailuser/{id}")
+        public ResponseEntity<User> getEmployeeById(@PathVariable(value = "id") Long userId)
+                throws ResourceNotFoundException {
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Employee not found for this id :: " + userId));
+            return ResponseEntity.ok().body(user);
+        }
+        @PutMapping("/modifuser/{id}")
+        public ResponseEntity<User> updateuser(@PathVariable(value = "id") Long userId,
+                                                   @Valid @RequestBody User userdetail) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
+
+        user.setUsername(userdetail.getUsername());
+        user.setName(userdetail.getName());
+        final User updateuser = userRepository.save(user);
+        return ResponseEntity.ok(updateuser);
+    }
+
+    @DeleteMapping("/deteuser/{id}")
+    public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long userId)
+            throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found for this id :: " + userId));
+
+        userRepository.delete(user);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return response;
+    }
+
+
+
 
     // @Override
     public void run(String... args) {

@@ -1,21 +1,26 @@
 package com.example.jira.api.report;
-
 import java.util.List;
 
 public class Report {
     private Content contents ;
     public int stpEngage(){
-        return contents.getCompletedIssuesEstimateSum() + contents.getIssuesNotCompletedEstimateSum();
+        return contents.getCompletedIssuesEstimateSum()
+                +
+                contents.getIssuesNotCompletedEstimateSum();
     }
-
     public int stpRealise(){
         return contents.getCompletedIssuesEstimateSum();
     }
 
-    public int  nbIssues(){
-        return contents.getCompletedIssues().size()+contents.getIssuesNotCompletedInCurrentSprint().size();
-    }
 
+
+
+
+
+
+    public int nbIssues(){
+       return contents.getCompletedIssues().size();
+    }
     public int usRealise(){
         int count=0;
         for (ReportIssue issue : contents.getCompletedIssues()) {
@@ -24,12 +29,14 @@ public class Report {
         }
         return count ;
     }
+
     public int usEngage(){
         int count=0;
         for (ReportIssue issue : contents.getCompletedIssues()) {
           if(issue.getTypeId().equals("10001"))
             count++;
         }
+
         for (ReportIssue issue : contents.getIssuesNotCompletedInCurrentSprint()) {
           if(issue.getTypeId().equals("10001"))
             count++;
@@ -40,16 +47,17 @@ public class Report {
     public int bugs(){
         int count=0;
         for (ReportIssue issue : contents.getCompletedIssues()) {
-            if(issue.getTypeId().equals("10004"))
+            if(issue.getTypeId().equals("10004")
+            )
                 count++;
         }
         for (ReportIssue issue : contents.getIssuesNotCompletedInCurrentSprint()) {
-            if(issue.getTypeId().equals("10004"))
+            if(issue.getTypeId().equals("10004")
+             )
                 count++;
         }
         return count ;
     }
-
 
     public Content getContents() {
         return contents;
@@ -62,6 +70,7 @@ public class Report {
                 '}';
     }
 }
+
 
 class  ReportIssue {
 private int id ;
@@ -163,6 +172,7 @@ class ReportEstimation {
 
      @Override
      public String toString() {
+
          return "Content{" +
                  "completedIssues=" + completedIssues +
                  ", issuesNotCompletedInCurrentSprint=" + issuesNotCompletedInCurrentSprint +

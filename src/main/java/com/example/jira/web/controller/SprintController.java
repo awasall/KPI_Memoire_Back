@@ -20,6 +20,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -79,11 +80,11 @@ public class SprintController {
                                                    // @SortDefault.SortDefaults({
                                                    //      @SortDefault(sort = "projectName", direction = Sort.Direction.ASC)})
                                                    Pageable pageable,
-                                           @RequestParam(value = "startPeriod", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate startPeriod,
-                                           @RequestParam(value = "endPeriod", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate endPeriod,
+                                           @RequestParam(value = "startPeriod", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final Date startPeriod,
+                                           @RequestParam(value = "endPeriod", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") final Date endPeriod,
                                            @RequestParam(value = "state", required = false) final String state
     ) {
-        final LocalDate today = LocalDate.now();
+        final Date today =new Date();
         if (startPeriod == null)
             //return convertToSprintDTO(sprintRepository.findByStateEquals("active", pageable));
             if (state == null)

@@ -28,7 +28,7 @@ public class User extends DateAudit {
     @Size(max = 15)
     private String username;
 
-    @NotBlank
+    //@NotBlank
     @Size(max = 100)
     private String password;
 

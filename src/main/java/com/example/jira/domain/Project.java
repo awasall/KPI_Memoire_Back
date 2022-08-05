@@ -12,11 +12,10 @@ import java.util.Set;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString //(exclude = {"boards"})
-@Builder(toBuilder = true)
+@ToString//(exclude = {"boards"})
+//@Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +23,7 @@ public class Project implements Serializable {
     @Id
    // @GeneratedValue(strategy = GenerationType.AUTO)
    // private  Long projectId;
-
+    @Column(length = 11, nullable = false)
     private String id;
     private String name ;
 

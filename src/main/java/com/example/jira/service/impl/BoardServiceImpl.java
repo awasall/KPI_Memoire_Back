@@ -49,7 +49,6 @@ public class BoardServiceImpl implements BoardService {
             log.info("ERROR URL -- {}", this.applicationProperties.getBaseUrl() + url);
             Mono.empty();
         });
-
        // response.subscribe(boardProcess -> log.info("BOARD {}", boardProcess));
 
         return  response.map(BoardProcess::getValues)/*.filter(boardDtos -> !boardDtos.isEmpty())*/.flatMapMany(boardDtos  -> {

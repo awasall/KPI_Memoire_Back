@@ -8,9 +8,9 @@ spring:
       # Hibernate ddl auto (create, create-drop, validate, update)
       ddl-auto: update
   datasource:
-    url: jdbc:mysql://10.100.59.111:3306/jirakpi
-    username: jirakpi
-    password: o4sn2019
+    url: jdbc:mysql://localhost:3306/jirakpi
+    username: root
+    password: passer
     # Initialize the datasource with available DDL and DML scripts
     initialization-mode: always
   data :
@@ -29,7 +29,6 @@ spring:
     ## Jackson Properties (Added by me)
       serialization.WRITE_DATES_AS_TIMESTAMPS: false
       time-zone: UTC
-
 application:
   baseUrl: http://jira.tools.orange-sonatel.com
   token: Basic c3RnX2VwdF9kczppdGVhbTIwMTk=
@@ -48,8 +47,8 @@ server:
 app:
   jwtSecret: JWTSuperSecretKey
   jwtExpirationInMs: 604800000
-
-
+cron:
+  expression: 0 0/5 * * * ?
 
 #logging:
 #  level:
